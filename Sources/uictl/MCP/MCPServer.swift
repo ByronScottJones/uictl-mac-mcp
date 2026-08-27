@@ -21,8 +21,6 @@ enum MCPServer {
         await server.withMethodHandler(CallTool.self) { params in
             let args = params.arguments?.mapValues(anyFromValue) ?? [:]
 
-            await SessionInteractivityCheck.warnIfNonInteractive(server: server, toolName: params.name)
-
             // The one capability that can't be a thin forward to the daemon:
             // elicitation requires the live `Server` connected to *this*
             // MCP client, which the daemon (talking only to a Unix socket)
@@ -34,6 +32,10 @@ enum MCPServer {
             guard let spec = toolDefinitions.first(where: { $0.tool.name == params.name }) else {
                 return .init(content: [.text(text: jsonString(errorResponse("unknown tool \(params.name)")), annotations: nil, _meta: nil)], isError: true)
             }
+            // Only checked once a tool name resolves to a real forwarded
+            // command — an unknown/typoed name should neither consume the
+            // one-shot warning nor force a daemon auto-spawn just to answer it.
+            await SessionInteractivityCheck.warnIfNonInteractive(server: server, toolName: spec.tool.name)
             let response = DaemonClient.send(command: spec.command, params: args)
             let ok = (response["ok"] as? Bool) ?? false
             return .init(content: [.text(text: jsonString(response), annotations: nil, _meta: nil)], isError: !ok)

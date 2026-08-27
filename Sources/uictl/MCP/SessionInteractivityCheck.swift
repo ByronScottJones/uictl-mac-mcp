@@ -15,8 +15,13 @@ enum SessionInteractivityCheck {
     /// would warn before the agent has even attempted anything that could
     /// fail, and `uictl_permissions` itself already surfaces the same signal
     /// directly in its response.
+    /// `uictl_displays` is deliberately *not* here despite querying no
+    /// specific window: `Displays.list()` calls `SCShareableContent.current`
+    /// (ScreenCaptureKit), which talks to the window server and can fail or
+    /// return unusable data in exactly the non-interactive session this
+    /// check targets.
     private static let desktopIndependentTools: Set<String> = [
-        "uictl_permissions", "uictl_apps", "uictl_displays",
+        "uictl_permissions", "uictl_apps",
         "uictl_feedback_create", "uictl_feedback_list", "uictl_feedback_get",
         "uictl_feedback_update", "uictl_feedback_delete", "uictl_feedback_check_duplicates",
         "uictl_feedback_submit", "uictl_log_export",

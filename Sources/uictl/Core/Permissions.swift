@@ -29,7 +29,11 @@ enum Permissions {
     /// return empty results instead of raising a clear error.
     static func interactiveSession() -> Bool {
         guard let dict = CGSessionCopyCurrentDictionary() as? [String: Any] else { return false }
-        return (dict[kCGSessionOnConsoleKey as String] as? Bool) ?? true
+        // A missing/unbridgeable key is not evidence of an interactive
+        // session either — default to the same conservative `false` used
+        // when the whole dictionary is unavailable, rather than assuming
+        // the happy path.
+        return (dict[kCGSessionOnConsoleKey as String] as? Bool) ?? false
     }
 
     static func status() -> JSONDict {
