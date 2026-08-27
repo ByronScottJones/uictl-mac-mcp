@@ -11,7 +11,7 @@ enum MCPServer {
         let server = Server(
             name: "uictl",
             version: "0.1.0",
-            capabilities: .init(tools: .init())
+            capabilities: .init(logging: .init(), tools: .init())
         )
 
         await server.withMethodHandler(ListTools.self) { _ in
@@ -20,6 +20,8 @@ enum MCPServer {
 
         await server.withMethodHandler(CallTool.self) { params in
             let args = params.arguments?.mapValues(anyFromValue) ?? [:]
+
+            await SessionInteractivityCheck.warnIfNonInteractive(server: server, toolName: params.name)
 
             // The one capability that can't be a thin forward to the daemon:
             // elicitation requires the live `Server` connected to *this*
@@ -239,7 +241,7 @@ private let toolDefinitions: [ToolSpec] = [
     ),
     ToolSpec(
         command: "permissions.status",
-        tool: Tool(name: "uictl_permissions", description: "Check Accessibility and Screen Recording permission status.", inputSchema: schema([:]))
+        tool: Tool(name: "uictl_permissions", description: "Check Accessibility and Screen Recording permission status. Also reports \"interactive\": whether the daemon has an interactive window-server session attached — false usually means it was auto-spawned from a non-interactive SSH shell before any GUI login, in which case clicks/screenshots/AX queries can silently no-op even with permissions granted.", inputSchema: schema([:]))
     ),
     ToolSpec(
         command: "feedback.create",
