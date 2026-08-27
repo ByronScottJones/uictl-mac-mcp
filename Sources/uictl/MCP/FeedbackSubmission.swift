@@ -17,7 +17,7 @@ enum FeedbackSubmission {
             guard let id = args["id"] as? Int else {
                 throw UICtlError.message("\"id\" is required")
             }
-            let repo = (args["repo"] as? String) ?? "byronjones-elsevier/uictl-mcp"
+            let repo = (args["repo"] as? String) ?? "byronjones-elsevier/uictl-mac-mcp"
             let token = args["token"] as? String
 
             let fetched = DaemonClient.send(command: "feedback.get", params: ["id": id])
