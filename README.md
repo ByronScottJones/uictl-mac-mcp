@@ -244,6 +244,12 @@ See `AGENTS.md` for a more detailed walkthrough and gotchas.
 - The daemon runs with no Dock icon and no Cmd-Tab entry (it's a background
   `.accessory` app), so if the activity log window gets buried behind other
   windows, Cmd-Tab won't bring it back — run `uictl log show` again instead.
+- **Driving this Mac over SSH** works, but if the daemon's very first
+  auto-spawn happens from a non-interactive SSH shell (before any GUI
+  login), it inherits a session with no window server attached and
+  Accessibility/screenshot calls can silently no-op. `uictl permissions`
+  reports this via its `"interactive"` field; see AGENTS.md's "Remote
+  testing over SSH" section for the fix.
 - **`feedback submit`'s duplicate check needs a GitHub token for a private
   repo** — it resolves one from `--token`, then `$GITHUB_TOKEN`, then `gh
   auth token` if `gh` is installed and already authenticated. If none of

@@ -11,7 +11,7 @@ enum MCPServer {
         let server = Server(
             name: "uictl",
             version: "0.1.0",
-            capabilities: .init(tools: .init())
+            capabilities: .init(logging: .init(), tools: .init())
         )
 
         await server.withMethodHandler(ListTools.self) { _ in
@@ -32,6 +32,10 @@ enum MCPServer {
             guard let spec = toolDefinitions.first(where: { $0.tool.name == params.name }) else {
                 return .init(content: [.text(text: jsonString(errorResponse("unknown tool \(params.name)")), annotations: nil, _meta: nil)], isError: true)
             }
+            // Only checked once a tool name resolves to a real forwarded
+            // command — an unknown/typoed name should neither consume the
+            // one-shot warning nor force a daemon auto-spawn just to answer it.
+            await SessionInteractivityCheck.warnIfNonInteractive(server: server, toolName: spec.tool.name)
             let response = DaemonClient.send(command: spec.command, params: args)
             let ok = (response["ok"] as? Bool) ?? false
             return .init(content: [.text(text: jsonString(response), annotations: nil, _meta: nil)], isError: !ok)
@@ -239,7 +243,7 @@ private let toolDefinitions: [ToolSpec] = [
     ),
     ToolSpec(
         command: "permissions.status",
-        tool: Tool(name: "uictl_permissions", description: "Check Accessibility and Screen Recording permission status.", inputSchema: schema([:]))
+        tool: Tool(name: "uictl_permissions", description: "Check Accessibility and Screen Recording permission status. Also reports \"interactive\": whether the daemon has an interactive window-server session attached — false usually means it was auto-spawned from a non-interactive SSH shell before any GUI login, in which case clicks/screenshots/AX queries can silently no-op even with permissions granted.", inputSchema: schema([:]))
     ),
     ToolSpec(
         command: "feedback.create",

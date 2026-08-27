@@ -214,6 +214,39 @@ elicitation, it falls back to the same direct-open behavior as the CLI
 after a ~2 minute wait — so don't assume the tool call hung if it takes a
 little while to return.
 
+## Remote testing over SSH
+
+A common setup: an agent session runs on one machine and drives this Mac
+over SSH — e.g. registering `uictl mcp` as a remote MCP server via
+`ssh target-host /path/to/uictl mcp`, which transparently tunnels the
+stdio JSON-RPC. This works fine *if the daemon is already attached to an
+interactive window-server session*.
+
+The trap: `uictl` auto-spawns its daemon on first use, from whatever
+process happens to call it first. If that first call comes from a cold
+SSH shell before any GUI user has logged in at the console, the daemon
+inherits that non-interactive session — Accessibility queries, screenshots,
+and synthesized clicks can then silently no-op or return empty/stale
+results instead of raising a clear error, since there's no window server
+for them to talk to.
+
+**Fix:** on this Mac, log in at the console (or connect via Screen
+Sharing) and start the daemon from *that* interactive session before any
+SSH-driven command can auto-spawn it cold:
+
+```sh
+uictl daemon start
+```
+
+Once it's running interactively, SSH-spawned callers reach the same
+daemon over the same Unix socket as any other caller — no different from
+driving it locally. `uictl permissions` reports an `"interactive"` field
+for exactly this — `false` means the daemon has no window-server session
+attached, almost always this exact trap. Over MCP, the first
+desktop-touching tool call in a session also triggers a one-time warning
+(via an MCP log notification) if this is detected, so you don't have to
+remember to check `uictl_permissions` proactively.
+
 ## MCP mode
 
 If your harness supports MCP tools directly, prefer that over shelling out:
