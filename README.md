@@ -1,5 +1,8 @@
 # uictl
 
+- [uictl-mac-mcp](https://github.com/ByronJones-Elsevier/uictl-mac-mcp) - Macos Version
+- [uictl-win-mcp](https://github.com/ByronJones-Elsevier/uictl-win-mcp) - Windows Version
+
 A macOS command-line tool (and MCP server) for finding, inspecting, and
 driving running GUI applications — built so a coding agent (Claude Code or
 otherwise) can locate a window, screenshot it, read its UI structure, and
