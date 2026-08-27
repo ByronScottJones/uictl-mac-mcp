@@ -289,7 +289,7 @@ enum CommandDispatcher {
     /// uictl's own issue tracker — where `feedback submit` sends things by
     /// default. Override with `--repo owner/repo` if this ever needs to
     /// point somewhere else (a fork, a private mirror, etc.).
-    private static let defaultFeedbackRepo = "byronjones-elsevier/uictl-mcp"
+    private static let defaultFeedbackRepo = "byronjones-elsevier/uictl-mac-mcp"
 
     // MARK: - Elements
 
