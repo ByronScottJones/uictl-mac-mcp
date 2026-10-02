@@ -1,7 +1,7 @@
 # uictl
 
-- [uictl-mac-mcp](https://github.com/ByronJones-Elsevier/uictl-mac-mcp) - Macos Version
-- [uictl-win-mcp](https://github.com/ByronJones-Elsevier/uictl-win-mcp) - Windows Version
+- [uictl-mac-mcp](https://github.com/ByronScottJones/uictl-mac-mcp) - Macos Version
+- [uictl-win-mcp](https://github.com/ByronScottJones/uictl-win-mcp) - Windows Version
 - [uictl-linux-mcp](https://github.com/ByronScottJones/uictl-linux-mcp) - Linux Version
 
 A macOS command-line tool (and MCP server) for finding, inspecting, and
