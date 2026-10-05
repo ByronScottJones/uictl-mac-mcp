@@ -1,7 +1,7 @@
 # uictl
 
-- [uictl-mac-mcp](https://github.com/ByronJones-Elsevier/uictl-mac-mcp) - Macos Version
-- [uictl-win-mcp](https://github.com/ByronJones-Elsevier/uictl-win-mcp) - Windows Version
+- [uictl-mac-mcp](https://github.com/ByronScottJones/uictl-mac-mcp) - Macos Version
+- [uictl-win-mcp](https://github.com/ByronScottJones/uictl-win-mcp) - Windows Version
 - [uictl-linux-mcp](https://github.com/ByronScottJones/uictl-linux-mcp) - Linux Version
 
 A macOS command-line tool (and MCP server) for finding, inspecting, and
@@ -83,6 +83,18 @@ During development, use the faster debug build (`swift build`, binary at
 `.build/debug/uictl`) instead. If you rebuild while the daemon is running,
 run `uictl daemon stop` afterward so the next command relaunches it from
 the new binary — otherwise you'll keep talking to the old one.
+
+## Tests
+
+```sh
+make test    # or: swift test
+```
+
+Unit tests (XCTest) live in `Tests/uictlTests`. They never touch the real
+`~/.uictl`: the state directory can be redirected with the `UICTL_HOME`
+environment variable, which the tests point at a temporary directory.
+Tests that drive real apps (Accessibility, screen capture) are not included,
+since they need granted permissions and an interactive session.
 
 ## First run: permissions
 
