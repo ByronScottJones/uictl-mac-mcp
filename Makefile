@@ -11,7 +11,7 @@ BINARY ?= uictl
 
 .DEFAULT_GOAL := help
 
-.PHONY: default all deps build build/debug install uninstall clean help
+.PHONY: default all deps build build/debug test install uninstall clean help
 
 ## Build everything (alias for build)
 default: build
@@ -31,6 +31,10 @@ build: deps
 ## Build the faster debug binary
 build/debug: CONFIG := debug
 build/debug: build
+
+## Run the unit tests (swift test)
+test: deps
+	swift test
 
 ## Symlink the built binary into PREFIX/bin and stop any stale daemon
 install: build daemon/stop

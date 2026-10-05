@@ -3,8 +3,12 @@ import Foundation
 /// All daemon state lives under ~/.uictl, per the project convention of storing
 /// app config/state under "$HOME/.<app_name>/".
 enum UICtlPaths {
+    /// `UICTL_HOME` overrides the location (used by tests to isolate state).
     static var homeDir: String {
-        NSHomeDirectory() + "/.uictl"
+        if let override = ProcessInfo.processInfo.environment["UICTL_HOME"], !override.isEmpty {
+            return override
+        }
+        return NSHomeDirectory() + "/.uictl"
     }
 
     static var socketPath: String {

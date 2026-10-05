@@ -84,6 +84,18 @@ During development, use the faster debug build (`swift build`, binary at
 run `uictl daemon stop` afterward so the next command relaunches it from
 the new binary — otherwise you'll keep talking to the old one.
 
+## Tests
+
+```sh
+make test    # or: swift test
+```
+
+Unit tests (XCTest) live in `Tests/uictlTests`. They never touch the real
+`~/.uictl`: the state directory can be redirected with the `UICTL_HOME`
+environment variable, which the tests point at a temporary directory.
+Tests that drive real apps (Accessibility, screen capture) are not included,
+since they need granted permissions and an interactive session.
+
 ## First run: permissions
 
 uictl needs **Accessibility** and **Screen Recording** permission for
