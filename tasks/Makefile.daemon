@@ -1,0 +1,13 @@
+# Makefile.daemon - targets in the daemon/ namespace (uictl background daemon).
+
+UICTL_BIN ?= .build/$(CONFIG)/uictl
+
+.PHONY: daemon/stop daemon/status
+
+## Stop the running daemon so the next command relaunches from the new binary
+daemon/stop:
+	-@$(UICTL_BIN) daemon stop
+
+## Show daemon status
+daemon/status:
+	@$(UICTL_BIN) daemon status

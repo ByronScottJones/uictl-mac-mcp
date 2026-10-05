@@ -15,6 +15,10 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "MCP", package: "swift-sdk"),
             ]
-        )
+        ),
+        .testTarget(
+            name: "uictlTests",
+            dependencies: ["uictl"]
+        ),
     ]
 )
